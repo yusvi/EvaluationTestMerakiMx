@@ -1,11 +1,23 @@
 import React, {Component} from 'react';
-import {Table, Row, Col, Container} from 'react-bootstrap'
+import {Table, Row, Col, Container, Button, Modal, Form} from 'react-bootstrap'
 
 export class Products extends Component{
 
     constructor(props){
         super(props)
-        this.state={products:[]}
+        this.state={
+            products:[],
+            data:{
+                product_name:null,
+                category:null,
+                price:null
+            },            
+            show: false
+        }
+        this.handleChangeProduct = this.handleChangeProduct.bind(this);
+        this.handleChangeCategory = this.handleChangeCategory.bind(this);
+        this.handleChangePrice = this.handleChangePrice.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
 
@@ -31,9 +43,73 @@ export class Products extends Component{
       
     }
 
+    handleSubmit(event){
+        
+
+        console.log('submit!', this.state)
+        fetch('http://localhost:3000/products', {
+            method: 'POST',  
+            body: JSON.stringify(this.state.data), 
+            headers:{
+              'Content-Type': 'application/json'
+            }
+          }).then(res => res.json())
+          .catch(error => console.error('Error:', error))
+          .then(response => {
+            console.log('Success:', response)
+              
+            this.setState(prevState => ({ 
+                    ...prevState, show: false 
+            }),()=>{
+                this.refreshList()
+            });
+
+        });
+
+
+          event.preventDefault();
+        
+    
+    }
+
+
+    handleChangeProduct(event) {
+        event.persist()
+
+        this.setState(prevState => ({ 
+            ...prevState, data:{ ...prevState.data,  product_name: event.target.value,  } 
+        }));
+     
+    }
+
+    handleChangeCategory(event) {
+        event.persist()
+        this.setState(prevState => ({ 
+            ...prevState, data:{ ...prevState.data,  category: event.target.value,  } 
+        }));
+     
+    }
+
+    handleChangePrice(event) {
+        event.persist()
+        this.setState(prevState => ({ 
+            ...prevState, data:{ ...prevState.data,  price: event.target.value,  } 
+        }));
+     
+    }
+
+
     render(){
 
         const {products} = this.state
+        const {show} = this.state
+
+        const handleClose = () => this.setState({
+            show:false
+        });
+        const handleShow = () => this.setState({
+            show:true
+        });
 
         return(
             <div className="mt-5 d-flex justify-content-left">
@@ -43,6 +119,51 @@ export class Products extends Component{
                     <Row>
                         <Col sm="12">
                             <h3>Productos</h3>
+                        </Col>
+
+                        <Col sm="12">
+                            <Button variant="primary"  onClick={handleShow} >Nuevo</Button>
+
+
+                             <Modal show={show} onHide={handleClose}>
+                                <Modal.Header closeButton>
+                                <Modal.Title>Modal heading</Modal.Title>
+                                </Modal.Header>
+                                <Modal.Body>
+
+                                    <Form onSubmit={this.handleSubmit}>
+                                        <Form.Group controlId="formBasicEmail">
+                                            <Form.Label>Product name</Form.Label>
+                                            <Form.Control type="text" required  placeholder="Enter name"    
+                                            onChange={this.handleChangeProduct}  />                                     
+                                        </Form.Group>
+
+                                        <Form.Group controlId="formBasicPassword">
+                                            <Form.Label>Category</Form.Label>
+                                            <Form.Control  type="text" required  placeholder="Enter category" 
+                                             onChange={this.handleChangeCategory}/>
+                                        </Form.Group>
+
+                                        <Form.Group controlId="formBasicPrice">
+                                            <Form.Label>Price</Form.Label>
+                                            <Form.Control required type="number"  placeholder="Enter price"
+                                            onChange={this.handleChangePrice} />
+                                        </Form.Group>
+                                       
+                                        <Button variant="primary" type="submit">
+                                            Submit
+                                        </Button>
+                                    </Form>
+                                
+                                </Modal.Body>
+                                <Modal.Footer>
+                                <Button variant="secondary" onClick={handleClose}>
+                                    Close
+                                </Button>
+                                
+                                </Modal.Footer>
+                            </Modal>
+                      
                         </Col>
 
                         <Col sm="12">
@@ -70,8 +191,12 @@ export class Products extends Component{
                             </Table>
                         </Col>
 
+
+
                     </Row>
-                    
+
+
+                                 
                 </Container>           
 
             </div>

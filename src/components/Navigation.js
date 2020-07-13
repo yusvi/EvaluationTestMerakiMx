@@ -9,9 +9,9 @@ export class Navigation extends Component{
                 <Navbar.Toggle aria-controls="basic-navbar-nav" /> 
                 <Navbar.Collapse id="basic--navbar-bar">
                     <Nav>
-                        <NavLink className="d-inline p-2 bg-dark text-white" to="/products">Products</NavLink>
-                        <NavLink className="d-inline p-2 bg-dark text-white" to="/customers">Customers</NavLink>
-                        <NavLink className="d-inline p-2 bg-dark text-white" to="/orders">Orders</NavLink>
+                        <NavLink className="d-inline p-2 bg-dark text-white" to="/products">Productos</NavLink>
+                        <NavLink className="d-inline p-2 bg-dark text-white" to="/customers">Clientes</NavLink>
+                        <NavLink className="d-inline p-2 bg-dark text-white" to="/orders">Ordenes</NavLink>
                         <NavLink className="d-inline p-2 bg-dark text-white" to="/">Home</NavLink>
                     </Nav>
                 </Navbar.Collapse>
